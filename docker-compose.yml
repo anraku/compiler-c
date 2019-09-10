@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  c:
+    tty: true
+    build: .
+    image: compiler-c
+    volumes:
+      - ./src/:/app/
