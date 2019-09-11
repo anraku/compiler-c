@@ -19,5 +19,6 @@ try() {
 try 0 0
 try 42 42
 try 4 "3+2-1" 
+try 20 "13 + 12 - 5" 
 
 echo OK
