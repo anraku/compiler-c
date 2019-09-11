@@ -25,9 +25,6 @@ struct Token {
 // 現在着目しているトークン
 Token *token;
 
-// 現在着目しているトークン
-Token *token;
-
 // エラーを報告するための関数
 // printfと同じ引数を取る
 void error(char *fmt, ...) {
