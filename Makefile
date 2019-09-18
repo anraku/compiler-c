@@ -1,15 +1,20 @@
+CC=gcc
 CFLAGS=-std=c11 -g -static
+SRCS=$(wildcard *.c)
+OBJS=$(SRCS:.c=.o)
+
+9cc: $(OBJS)
+				$(CC) -o 9cc $(OBJS) $(LDFLAGS)
+
+$(OBJS): 9cc.h
 
 init:
 				@docker-compose up -d
-
-9cc: src/9cc.c init
-				@docker-compose exec c gcc -o 9cc 9cc.c
 
 test: 9cc
 				@docker-compose exec c sh test.sh
 
 clean:
-				rm -f src/9cc src/*.o src/*~ src/tmp*
+				rm -f 9cc *.o *~ tmp*
 
 .PHONY: init test clean

@@ -1,5 +1,5 @@
-src/*~
-src/*.o
-src/tmp*
-src/a.out
-src/9cc
+*~
+*.o
+tmp*
+a.out
+9cc
