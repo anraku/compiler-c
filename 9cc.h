@@ -9,7 +9,7 @@ typedef enum {
   ND_EQ,     // ==
   ND_NE,     // !=
   ND_ASSIGN, // =
-  // ND_LVAR,   // ローカル変数
+  ND_LVAR,   // ローカル変数
   ND_NUM,    // 整数
 } NodeKind;
 
@@ -27,7 +27,7 @@ struct Node {
 // トークンの種類
 typedef enum {
   TK_RESERVED, // 記号
-  // TK_IDENT,    // 識別子
+  TK_IDENT,    // 識別子
   TK_NUM,      // 整数トークン
   TK_EOF,      // 入力の終わりを表すトークン
 } TokenKind;

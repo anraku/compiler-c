@@ -56,12 +56,13 @@ bool consume(char *op) {
   return true;
 }
 
-// Token *consume_ident() {
-//   if (token->kind != TK_IDENT ||
-//       strlen(token->str) != token->len)
-//     return NULL;
-//   return token->next;
-// }
+Token *consume_ident() {
+  if (token->kind != TK_IDENT)
+    return NULL;
+  Token *t = token;
+  token = token->next;
+  return t;
+}
 
 // 次のトークンが期待している記号のときには、トークンを1つ読み進める。
 // それ以外の場合にはエラーを報告する。
@@ -125,10 +126,10 @@ Token *tokenize(char *p) {
       }
     }
 
-    // if ('a' <= *p && *p >= 'z') {
-    //   cur = new_token(TK_IDENT, cur, p++, 1);
-    //   continue;
-    // }
+    if (*p >= 'a' && *p <= 'z') {
+      cur = new_token(TK_IDENT, cur, p++, 1);
+      continue;
+    }
 
     if (isdigit(*p)) {
       cur = new_token(TK_NUM, cur, p, 1);
@@ -155,13 +156,13 @@ Node *primary() {
 		return node;
 	}
 
-  // Token *tok = consume_ident();
-  // if (tok) {
-  //   Node *node = calloc(1, sizeof(Node));
-  //   node->kind = ND_LVAR;
-  //   node->offset = (tok->str[0] - 'a' + 1) * 8;
-  //   return node;
-  // }
+  Token *tok = consume_ident();
+  if (tok) {
+    Node *node = calloc(1, sizeof(Node));
+    node->kind = ND_LVAR;
+    node->offset = (tok->str[0] - 'a' + 1) * 8;
+    return node;
+  }
 
 	return new_node_num(expect_number());
 }
