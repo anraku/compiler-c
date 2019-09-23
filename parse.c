@@ -56,6 +56,13 @@ bool consume(char *op) {
   return true;
 }
 
+// Token *consume_ident() {
+//   if (token->kind != TK_IDENT ||
+//       strlen(token->str) != token->len)
+//     return NULL;
+//   return token->next;
+// }
+
 // 次のトークンが期待している記号のときには、トークンを1つ読み進める。
 // それ以外の場合にはエラーを報告する。
 void expect(char *op) {
@@ -95,7 +102,6 @@ Token *tokenize(char *p) {
   Token head;
   head.next = NULL;
   Token *cur = &head;
-
   while (*p) {
     // 空白文字をスキップ
     if (isspace(*p)) {
@@ -119,15 +125,24 @@ Token *tokenize(char *p) {
       }
     }
 
+    // if ('a' <= *p && *p >= 'z') {
+    //   cur = new_token(TK_IDENT, cur, p++, 1);
+    //   continue;
+    // }
+
     if (isdigit(*p)) {
       cur = new_token(TK_NUM, cur, p, 1);
       cur->val = strtol(p, &p, 10);
       continue;
     }
 
+    if (*p == ';') {
+      cur = new_token(TK_RESERVED, cur, p++, 1);
+      continue;
+    }
+
     error_at(cur->str, "トークナイズできません");
   }
-
   new_token(TK_EOF, cur, p, 1);
   return head.next;
 }
@@ -139,6 +154,14 @@ Node *primary() {
 		expect(")");
 		return node;
 	}
+
+  // Token *tok = consume_ident();
+  // if (tok) {
+  //   Node *node = calloc(1, sizeof(Node));
+  //   node->kind = ND_LVAR;
+  //   node->offset = (tok->str[0] - 'a' + 1) * 8;
+  //   return node;
+  // }
 
 	return new_node_num(expect_number());
 }
@@ -213,6 +236,27 @@ Node *equality() {
   }
 }
 
+Node *assign() {
+  Node *node = equality();
+  if (consume("=")) 
+    node = new_node(ND_ASSIGN, node, assign());
+  return node;
+}
+
 Node *expr() {
-  return equality();
+  return assign();
+}
+
+Node *stat() {
+  Node *node = expr();
+  expect(";");
+  return node;
+}
+
+Node *program() {
+  int i;
+  while(!at_eof()) {
+    code[i++] = stat();
+  }
+  code[i] = NULL;
 }
