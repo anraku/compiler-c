@@ -110,7 +110,8 @@ Token *tokenize(char *p) {
       continue;
     }
 
-    if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' || *p == ')') {
+    if (*p == '+' || *p == '-' || *p == '*' || *p == '/'
+     || *p == '(' || *p == ')' || *p == ';') {
       cur = new_token(TK_RESERVED, cur, p++, 1);
       continue;
     }
@@ -134,11 +135,6 @@ Token *tokenize(char *p) {
     if (isdigit(*p)) {
       cur = new_token(TK_NUM, cur, p, 1);
       cur->val = strtol(p, &p, 10);
-      continue;
-    }
-
-    if (*p == ';') {
-      cur = new_token(TK_RESERVED, cur, p++, 1);
       continue;
     }
 
