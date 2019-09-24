@@ -98,6 +98,13 @@ Token *new_token(TokenKind kind, Token *cur, char *str, int len) {
   return tok;
 }
 
+int is_alnum(char c) {
+  return ('a' <= c && c <= 'z') ||
+         ('A' <= c && c <= 'Z') ||
+         ('0' <= c && c <= '9') ||
+         (c == '_');
+}
+
 // 入力文字列pをトークナイズしてそれを返す
 Token *tokenize(char *p) {
   Token head;
@@ -107,6 +114,13 @@ Token *tokenize(char *p) {
     // 空白文字をスキップ
     if (isspace(*p)) {
       p++;
+      continue;
+    }
+
+    // 次の文字列がreturnで、その後の文字がトークンを構成する文字ではない
+    if (strncmp(p, "return", 6) == 0 && !is_alnum(p[6])) {
+      cur = new_token(TK_RESERVED, cur, p, 6);
+      p += 6;
       continue;
     }
 
@@ -245,8 +259,18 @@ Node *expr() {
 }
 
 Node *stat() {
-  Node *node = expr();
-  expect(";");
+  Node *node;
+
+  if (consume("return")) {
+    node = calloc(1, sizeof(Node));
+    node->kind = ND_RETURN;
+    node->lhs = expr();
+  } else {
+    node = expr();
+  }
+
+  if (!consume(";"))
+    error_at(token->str, "';'ではないトークンです");
   return node;
 }
 

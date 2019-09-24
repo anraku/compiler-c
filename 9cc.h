@@ -11,6 +11,7 @@ typedef enum {
   ND_ASSIGN, // =
   ND_LVAR,   // ローカル変数
   ND_NUM,    // 整数
+  ND_RETURN, // return
 } NodeKind;
 
 typedef struct Node Node;
@@ -42,6 +43,19 @@ struct Token {
   char *str;      // トークン文字列
   int len;       // トークンの長さ
 };
+
+typedef struct LVar LVar;
+
+// ローカル変数の型
+struct LVar {
+  LVar *next; // 次の変数かNULL
+  char *name; // 変数の名前
+  int len;    // 名前の長さ
+  int offset; // RBPからのオフセット
+};
+
+// ローカル変数
+LVar *locals;
 
 extern Token *token;
 extern char *user_input;

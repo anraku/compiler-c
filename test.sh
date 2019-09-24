@@ -37,5 +37,7 @@ try 4 "(4 / 2 >= 1 < (5-3) * 2) + 3;"
 try 3 "1; 2; 3;"
 try 7 "a = 1; b = 2; c = 3; a + b * c;"
 try 4 "a = 1; a * (2 + 2);"
+try 2 "return 2;"
+try 3 "a = 3; return a;"
 
 echo OK
